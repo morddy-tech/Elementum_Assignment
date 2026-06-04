@@ -46,7 +46,7 @@ export default function SplitContent() {
                   viewBox="0 0 100 10"
                   preserveAspectRatio="none"
                   fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200"
                 >
                   <path
                     d="M3 5 Q35 8 70 4 T97 5"
