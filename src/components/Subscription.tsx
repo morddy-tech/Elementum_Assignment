@@ -226,7 +226,7 @@ export default function Subscription() {
           <p>© 2026 Elementum. All rights reserved.</p>
           <div className="flex items-center gap-1">
             <Globe className="w-3.5 h-3.5 opacity-65" />
-            <span>HQ Widescreen Standard Layout</span>
+            <span>Developed by: IFEDAYO MATTHEW</span>
           </div>
         </div>
 
