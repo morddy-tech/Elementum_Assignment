@@ -1,0 +1,6 @@
+{
+  "name": "Elementum Creative Studio",
+  "description": "An interactive, high-fidelity responsive landing page for Elementum Design Studio, complete with organic layouts, fluid framer-motion animations, responsive sections, and an interactive testimonial system.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

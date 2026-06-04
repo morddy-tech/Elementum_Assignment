@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Syne:wght@500;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-heading: "Syne", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+
+  --color-brand-mint: #D2EBE1;
+  --color-brand-mint-light: #EEF8F4;
+  --color-brand-mint-dark: #ACDBC7;
+  --color-brand-pink: #FFD4E5;
+  --color-brand-pink-light: #FFEBF3;
+  --color-brand-purple: #924FE8;
+  --color-brand-yellow: #FED443;
+  --color-brand-coral: #FF665A;
+  --color-brand-dark: #121212;
+}
+
+@layer base {
+  body {
+    @apply font-sans text-brand-dark antialiased bg-white selection:bg-brand-mint selection:text-brand-dark overflow-x-hidden;
+  }
+}
+
+/* Custom decorative elements */
+.squiggle-underline {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='10' viewBox='0 0 100 10'><path d='M0,5 Q12.5,9 25,5 T50,5 T75,5 T100,5' fill='none' stroke='%23FED443' stroke-width='3' stroke-linecap='round'/></svg>");
+  background-position: bottom;
+  background-repeat: repeat-x;
+  padding-bottom: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #ACDBC7;
+  border-radius: 9999px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #924FE8;
+}
