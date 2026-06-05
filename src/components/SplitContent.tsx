@@ -3,28 +3,53 @@ import { motion } from "motion/react";
 export default function SplitContent() {
   return (
     <section id="studio" className="relative py-24 bg-white overflow-hidden">
-      {/* Curved Connective Wave Line (flows from top section right-side down to bottom section left-side) */}
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:block">
+      {/* Curved Connective Wave Line - now properly centered between the two sections */}
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-0 hidden lg:flex items-center justify-center">
         <svg
-          className="w-full h-full"
-          viewBox="0 0 1440 1000"
+          className="absolute w-full h-full max-w-7xl mx-auto"
+          viewBox="0 0 1440 600"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          preserveAspectRatio="none"
         >
-          {/* Wave path from coordinates representing circle center to second circle center */}
+          <defs>
+            <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+          {/* Subtle Glow Layer */}
           <path
-            d="M 1000 240 Q 600 400, 680 600 T 300 780"
+            d="M 1100 150 Q 720 300, 720 350 T 340 380"
+            stroke="#FF665A"
+            strokeWidth="5"
+            strokeLinecap="round"
+            fill="none"
+            className="opacity-20 blur-[3px]"
+            filter="url(#glow)"
+          />
+          {/* Base Dashed Line */}
+          <path
+            d="M 1100 150 Q 720 300, 720 350 T 340 380"
             stroke="#FF665A"
             strokeWidth="2"
             strokeDasharray="8 6"
-            className="opacity-50"
-          />
-          <path
-            d="M 1000 240 Q 600 400, 680 600 T 300 780"
-            stroke="#FF665A"
-            strokeWidth="3.5"
             strokeLinecap="round"
-            className="opacity-15 blur-[2px]"
+            fill="none"
+            className="opacity-60"
+          />
+          {/* Solid Highlight Line */}
+          <path
+            d="M 1100 150 Q 720 300, 720 350 T 340 380"
+            stroke="#FF665A"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            fill="none"
+            className="opacity-30"
+            filter="url(#glow)"
           />
         </svg>
       </div>
