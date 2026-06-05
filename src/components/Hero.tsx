@@ -1,67 +1,276 @@
-import { motion } from "motion/react";
+import { motion, useReducedMotion } from "motion/react";
 import { TEAM_MEMBERS } from "../data";
+import { useState, useEffect, useCallback, memo } from "react";
 
+// Types
+interface TeamMember {
+  id: string | number;
+  name: string;
+  role: string;
+  image: string;
+  sizeClass: string;
+  positionClass: string;
+  animationDelay: number;
+}
+
+// Memoized Team Member Avatar Component
+const TeamMemberAvatar = memo(({ 
+  member, 
+  index 
+}: { 
+  member: TeamMember; 
+  index: number;
+}) => {
+  const [imageError, setImageError] = useState(false);
+  const prefersReducedMotion = useReducedMotion();
+
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : { opacity: 0, scale: 0.8, y: 40 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={prefersReducedMotion ? { duration: 0 } : {
+        duration: 0.8,
+        delay: member.animationDelay,
+        type: "spring",
+        stiffness: 100,
+        damping: 15,
+      }}
+      whileHover={prefersReducedMotion ? {} : {
+        scale: 1.1,
+        y: -10,
+        zIndex: 40,
+        transition: { duration: 0.2 },
+      }}
+      className={`absolute ${member.sizeClass} ${member.positionClass} transition-shadow duration-300 pointer-events-auto rounded-full group cursor-pointer`}
+      role="listitem"
+      aria-label={`Team member: ${member.name}, ${member.role}`}
+    >
+      <div className="w-full h-full rounded-full overflow-hidden border-[4px] border-white shadow-xl ring-4 ring-transparent group-hover:ring-brand-purple/40 group-hover:shadow-2xl transition-all duration-300">
+        {imageError ? (
+          <div className="w-full h-full bg-gradient-to-br from-brand-purple to-brand-pink flex items-center justify-center text-white text-2xl font-bold">
+            {member.name.charAt(0)}
+          </div>
+        ) : (
+          <img
+            src={member.image}
+            alt={`${member.name} - ${member.role}`}
+            className="w-full h-full object-cover"
+            loading="lazy"
+            onError={() => setImageError(true)}
+            referrerPolicy="no-referrer"
+          />
+        )}
+      </div>
+
+      {/* Tooltip */}
+      <div 
+        className="absolute top-[-40px] left-1/2 -translate-x-1/2 bg-brand-dark/95 backdrop-blur-sm text-white py-1.5 px-3 rounded-md text-[10px] md:text-xs font-sans tracking-wide shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none duration-200 whitespace-nowrap z-50"
+        aria-hidden="true"
+      >
+        <p className="font-bold text-xs">{member.name}</p>
+        <p className="font-mono text-[9px] text-brand-mint">{member.role}</p>
+      </div>
+    </motion.div>
+  );
+});
+
+TeamMemberAvatar.displayName = 'TeamMemberAvatar';
+
+// Floating Cursor Component
+const FloatingCursor = memo(() => {
+  const prefersReducedMotion = useReducedMotion();
+  
+  if (prefersReducedMotion) return null;
+  
+  return (
+    <motion.div
+      animate={{
+        x: [0, 40, -20, 0],
+        y: [0, -20, 15, 0],
+      }}
+      transition={{
+        duration: 12,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      className="absolute z-20 left-[25%] top-[56%] lg:left-[45%] lg:top-[54%] pointer-events-none"
+      aria-hidden="true"
+    >
+      <div className="relative flex items-center">
+        <svg
+          className="w-5 h-5 text-brand-coral drop-shadow-md transform -rotate-45"
+          fill="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path d="M4 4l16 7-9 2-7 11z" />
+        </svg>
+        <div className="bg-brand-coral text-white text-[10px] font-mono px-2 py-0.5 rounded-full rounded-tl-none font-bold shadow-md -ml-1 border border-white/20">
+          C
+        </div>
+      </div>
+    </motion.div>
+  );
+});
+
+FloatingCursor.displayName = 'FloatingCursor';
+
+// Active User Pill Component
+const ActiveUserPill = memo(() => {
+  const prefersReducedMotion = useReducedMotion();
+  
+  return (
+    <motion.div
+      initial={prefersReducedMotion ? false : { opacity: 0, y: -20, rotate: -5 }}
+      animate={{ opacity: 1, y: 0, rotate: 2 }}
+      transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, type: "spring", delay: 0.2 }}
+      className="absolute right-6 top-[-10px] md:right-[15%] md:top-2 hover:scale-105 duration-200 z-30"
+    >
+      <div className="flex items-center gap-1.5 bg-[#1E1E1E] text-white text-[11px] md:text-xs font-mono py-1 px-2.5 rounded-full shadow-lg border border-white/10 pointer-events-auto">
+        <span className="w-4 h-4 rounded-full bg-[#0ACF83] text-white flex items-center justify-center text-[9px] font-bold" aria-label="Figma">
+          P
+        </span>
+        <span role="img" aria-label="Parrot">🦜</span>
+        <span className="opacity-40" aria-hidden="true">|</span>
+        <span className="font-bold">3 active</span>
+        <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" aria-label="Active status" />
+      </div>
+    </motion.div>
+  );
+});
+
+ActiveUserPill.displayName = 'ActiveUserPill';
+
+// Background Decorators Component
+const BackgroundDecorators = memo(() => (
+  <>
+    {/* Squiggle lines */}
+    <div 
+      className="absolute left-0 top-[20%] w-[120px] md:w-[180px] h-[300px] pointer-events-none opacity-40 md:opacity-85 select-none hidden sm:block"
+      aria-hidden="true"
+    >
+      <svg
+        viewBox="0 0 100 200"
+        className="w-full h-full fill-none stroke-current"
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+      >
+        <path
+          d="M-20,20 Q40,60 10,100 T50,180 T-10,240"
+          stroke="#FF665A"
+          strokeWidth="3.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M-30,40 Q30,80 0,120 T30,190 T-30,260"
+          stroke="#121212"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </svg>
+    </div>
+
+    {/* Purple semicircle */}
+    <motion.div
+      animate={useReducedMotion() ? {} : { y: [0, -15, 0], rotate: [0, 4, 0] }}
+      transition={useReducedMotion() ? { duration: 0 } : { duration: 6, repeat: Infinity, ease: "easeInOut" }}
+      className="absolute right-[-30px] md:right-[5%] top-[15%] lg:top-[25%] w-32 h-64 md:w-40 md:h-80 bg-brand-purple rounded-l-full opacity-90 select-none pointer-events-none"
+      aria-hidden="true"
+    />
+  </>
+));
+
+BackgroundDecorators.displayName = 'BackgroundDecorators';
+
+// Mobile Team Gallery Component
+const MobileTeamGallery = memo(({ members }: { members: TeamMember[] }) => (
+  <div className="block sm:hidden overflow-x-auto overflow-y-visible pb-6 pt-2 px-6 custom-scrollbar scroll-smooth">
+    <div className="inline-flex gap-4">
+      {members.map((member) => (
+        <div
+          key={member.id}
+          className="flex flex-col items-center flex-shrink-0 group cursor-pointer"
+          role="listitem"
+        >
+          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white ring-4 ring-brand-mint/30 shadow-lg transition-transform duration-300 group-hover:scale-105">
+            <img
+              src={member.image}
+              alt={`${member.name} - ${member.role}`}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              referrerPolicy="no-referrer"
+            />
+          </div>
+          <span className="mt-2 text-xs font-semibold text-brand-dark">
+            {member.name}
+          </span>
+          <span className="text-[10px] text-gray-400 font-mono">
+            {member.role}
+          </span>
+        </div>
+      ))}
+    </div>
+  </div>
+));
+
+MobileTeamGallery.displayName = 'MobileTeamGallery';
+
+// Desktop Team Gallery Component
+const DesktopTeamGallery = memo(({ members }: { members: TeamMember[] }) => (
+  <div className="hidden sm:block absolute inset-0 w-full h-full">
+    {members.map((member, idx) => (
+      <TeamMemberAvatar key={member.id} member={member} index={idx} />
+    ))}
+  </div>
+));
+
+DesktopTeamGallery.displayName = 'DesktopTeamGallery';
+
+// Main Hero Component
 export default function Hero() {
+  const prefersReducedMotion = useReducedMotion();
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  if (!isMounted) {
+    // SSR fallback
+    return (
+      <section
+        id="home"
+        className="relative min-h-[90vh] lg:min-h-screen bg-white pt-10 pb-48 overflow-hidden flex flex-col justify-between"
+      >
+        <div className="max-w-7xl mx-auto px-6 relative z-10 w-full flex-grow flex flex-col justify-center items-center text-center">
+          <div className="max-w-4xl mx-auto mt-6">
+            <h1 className="font-heading text-[10vw] sm:text-[6vw] md:text-[5.5vw] lg:text-[4.6vw] font-bold text-brand-dark leading-[1.1] tracking-tight">
+              Loading...
+            </h1>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
     <section
       id="home"
       className="relative min-h-[90vh] lg:min-h-screen bg-white pt-10 pb-48 overflow-hidden flex flex-col justify-between"
+      aria-label="Hero section"
     >
       {/* Background Decorators */}
-      {/* Black/pink continuous squiggle lines on the left margin */}
-      <div className="absolute left-0 top-[20%] w-[120px] md:w-[180px] h-[300px] pointer-events-none opacity-40 md:opacity-85 select-none hidden sm:block">
-        <svg
-          viewBox="0 0 100 200"
-          className="w-full h-full fill-none stroke-current"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M-20,20 Q40,60 10,100 T50,180 T-10,240"
-            stroke="#FF665A"
-            strokeWidth="3.5"
-            strokeLinecap="round"
-          />
-          <path
-            d="M-30,40 Q30,80 0,120 T30,190 T-30,260"
-            stroke="#121212"
-            strokeWidth="3"
-            strokeLinecap="round"
-          />
-        </svg>
-      </div>
+      <BackgroundDecorators />
 
-      {/* Purple semicircle floating on the right margin */}
-      <motion.div
-        animate={{ y: [0, -15, 0], rotate: [0, 4, 0] }}
-        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute right-[-30px] md:right-[5%] top-[15%] lg:top-[25%] w-32 h-64 md:w-40 md:h-80 bg-brand-purple rounded-l-full opacity-90 select-none pointer-events-none"
-      />
+      {/* Floating Elements */}
+      <ActiveUserPill />
+      <FloatingCursor />
 
+      {/* Main Content */}
       <div className="max-w-7xl mx-auto px-6 relative z-10 w-full flex-grow flex flex-col justify-center items-center text-center">
-        {/* Figma Multiplayer Active User Pill */}
-        <motion.div
-          initial={{ opacity: 0, y: -20, rotate: -5 }}
-          animate={{ opacity: 1, y: 0, rotate: 2 }}
-          transition={{ duration: 0.8, type: "spring", delay: 0.2 }}
-          className="absolute right-6 top-[-10px] md:right-[15%] md:top-2 hover:scale-105 duration-200"
-        >
-          <div className="flex items-center gap-1.5 bg-[#1E1E1E] text-white text-[11px] md:text-xs font-mono py-1 px-2.5 rounded-full shadow-lg border border-white/10 select-none pointer-events-auto">
-            <span className="w-4 h-4 rounded-full bg-[#0ACF83] text-white flex items-center justify-center text-[9px] font-bold">
-              P
-            </span>
-            <span>🦜</span>
-            <span className="opacity-40">|</span>
-            <span className="font-bold">3 active</span>
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-          </div>
-        </motion.div>
-
         {/* Heading Layout */}
         <div className="max-w-4xl mx-auto mt-6">
-          <h1
-            id="hero-title"
-            className="font-heading text-[10vw] sm:text-[6vw] md:text-[5.5vw] lg:text-[4.6vw] font-bold text-brand-dark leading-[1.1] tracking-tight relative"
-          >
+          <h1 className="font-heading text-[10vw] sm:text-[6vw] md:text-[5.5vw] lg:text-[4.6vw] font-bold text-brand-dark leading-[1.1] tracking-tight">
             {/* The thinkers */}
             <span className="inline-block mr-2 relative z-10">
               The{" "}
@@ -74,6 +283,7 @@ export default function Hero() {
                   preserveAspectRatio="none"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
                   <path
                     d="M3 5 Q35 9 60 4 T97 5"
@@ -110,40 +320,11 @@ export default function Hero() {
           </h1>
         </div>
 
-        {/* Floating Orange Cursor Design (Figma Style) */}
-        <motion.div
-          animate={{
-            x: [0, 40, -20, 0],
-            y: [0, -20, 15, 0],
-          }}
-          transition={{
-            duration: 12,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute z-20 left-[25%] top-[56%] lg:left-[45%] lg:top-[54%] pointer-events-none"
-        >
-          <div className="relative flex items-center">
-            {/* Pointer SVG clicker */}
-            <svg
-              className="w-5 h-5 text-brand-coral drop-shadow-md transform -rotate-45"
-              fill="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path d="M4 4l16 7-9 2-7 11z" />
-            </svg>
-            <div className="bg-brand-coral text-white text-[10px] font-mono px-2 py-0.5 rounded-full rounded-tl-none font-bold shadow-md -ml-1 border border-white/20">
-              C
-            </div>
-          </div>
-        </motion.div>
-
         {/* Subtitle Text */}
         <motion.p
-          id="hero-subtitle"
-          initial={{ opacity: 0, y: 15 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={prefersReducedMotion ? { duration: 0 } : { duration: 0.8, delay: 0.4 }}
           className="mt-10 max-w-2xl text-center text-[15px] md:text-[17px] text-gray-500 leading-relaxed font-sans"
         >
           We are a team of strategists, designers, communicators, researchers.
@@ -152,78 +333,10 @@ export default function Hero() {
         </motion.p>
       </div>
 
-      {/* Overlapping Organic Team Portrait Gallery (Responsive Layout) */}
+      {/* Team Gallery */}
       <div className="relative w-full bottom-[-10px] left-0 right-0 max-w-7xl mx-auto h-[260px] md:h-[300px] lg:h-[380px] mt-16 px-6">
-        {/* Scrollable Slider on very small screens, exact Organic Placement on large screens */}
-        <div className="block sm:hidden overflow-x-auto whitespace-nowrap py-6 custom-scrollbar scroll-smooth">
-          <div className="inline-flex gap-4 px-2">
-            {TEAM_MEMBERS.map((member, idx) => (
-              <div
-                key={member.id}
-                id={`mobile-team-avatar-${idx}`}
-                className="flex flex-col items-center flex-shrink-0"
-              >
-                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-white ring-4 ring-brand-mint/30 shadow-lg">
-                  <img
-                    src={member.image}
-                    alt={member.name}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </div>
-                <span className="mt-2 text-xs font-semibold text-brand-dark">
-                  {member.name}
-                </span>
-                <span className="text-[10px] text-gray-400 font-mono">
-                  {member.role}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Large screens: Gorgeous visual absolute coordinates positioning following the original mockup curves */}
-        <div className="hidden sm:block absolute inset-0 w-full h-full">
-          {TEAM_MEMBERS.map((member, idx) => (
-            <motion.div
-              key={member.id}
-              id={`desktop-team-avatar-${idx}`}
-              initial={{ opacity: 0, scale: 0.8, y: 40 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={{
-                duration: 0.8,
-                delay: member.animationDelay,
-                type: "spring",
-                stiffness: 100,
-                damping: 15,
-              }}
-              whileHover={{
-                scale: 1.1,
-                y: -10,
-                zIndex: 40,
-                transition: { duration: 0.2 },
-              }}
-              className={`absolute ${member.sizeClass} ${member.positionClass} transition-shadow duration-300 pointer-events-auto rounded-full group cursor-pointer`}
-            >
-              <div className="w-full h-full rounded-full overflow-hidden border-[4px] border-white shadow-xl ring-4 ring-transparent group-hover:ring-brand-purple/40 group-hover:shadow-2xl transition-all duration-300">
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-full h-full object-cover"
-                  referrerPolicy="no-referrer"
-                />
-              </div>
-
-              {/* Tooltip Overlay */}
-              <div className="absolute top-[-40px] left-1/2 -translate-x-1/2 bg-brand-dark/95 text-white py-1 px-2.5 rounded-md text-[10px] md:text-xs font-sans tracking-wide shadow-xl opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none duration-200 shrink-0 whitespace-nowrap">
-                <p className="font-bold">{member.name}</p>
-                <p className="font-mono text-[9px] text-brand-mint">
-                  {member.role}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        <MobileTeamGallery members={TEAM_MEMBERS} />
+        <DesktopTeamGallery members={TEAM_MEMBERS} />
       </div>
     </section>
   );
