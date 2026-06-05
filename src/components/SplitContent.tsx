@@ -130,7 +130,6 @@ export default function SplitContent() {
                 src="https://images.unsplash.com/photo-1542744094-3a31f103e35f?auto=format&fit=crop&q=80&w=800"
                 alt="Creative Collaboration Boardroom"
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                referrerPolicy="no-referrer"
               />
             </motion.div>
           </div>
@@ -164,7 +163,6 @@ export default function SplitContent() {
                 src="https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?auto=format&fit=crop&q=80&w=800"
                 alt="Creative strategists lunch working session"
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                referrerPolicy="no-referrer"
               />
             </motion.div>
           </div>
