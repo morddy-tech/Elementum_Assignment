@@ -160,7 +160,7 @@ export default function SplitContent() {
               className="relative w-[320px] h-[320px] md:w-[420px] md:h-[420px] rounded-full overflow-hidden border-[6px] border-white shadow-2xl z-10 hover:shadow-brand-pink/20 hover:border-brand-pink transition-all duration-500"
             >
               <img
-                src="https://picsum.photos/id/26/800/800"
+                src="https://images.unsplash.com/photo-1531538606174-0f90ff5dce83?auto=format&fit=crop&q=80&w=800"
                 alt="Creative strategists lunch working session"
                 className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
               />
