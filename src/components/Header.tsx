@@ -95,7 +95,7 @@ export default function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-96 bg-white shadow-2xl z-40 p-8 flex flex-col hidden md:flex overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 w-96 bg-white shadow-2xl z-40 p-8 flex flex-col hidden md:flex"
             >
               <button
                 onClick={() => setIsDetailsOpen(false)}
@@ -105,7 +105,7 @@ export default function Header() {
                 <X className="w-5 h-5" />
               </button>
               
-              <div className="mt-12 flex flex-col gap-8">
+              <div className="flex flex-col gap-8 h-full">
                 <div>
                   <span className="font-heading text-xs uppercase tracking-widest text-brand-purple font-bold">
                     The Thinkers & Doers
@@ -151,7 +151,7 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Drawer Overlay & Content - FIXED VERSION */}
+      {/* Mobile Drawer - NON-SCROLLABLE VERSION */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -165,17 +165,17 @@ export default function Header() {
               className="fixed inset-0 bg-black z-40 md:hidden"
             />
 
-            {/* Slide-out Drawer - Now with proper navigation visibility */}
+            {/* Slide-out Drawer - No overflow scrolling */}
             <motion.div
               id="mobile-drawer-content"
               initial={{ x: "100%" }}
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-40 p-8 flex flex-col md:hidden overflow-y-auto"
+              className="fixed right-0 top-0 bottom-0 w-4/5 max-w-sm bg-white shadow-2xl z-40 p-8 flex flex-col md:hidden"
             >
-              {/* Navigation Section - Now clearly visible */}
-              <div className="flex flex-col gap-8">
+              {/* Navigation Section */}
+              <div className="flex-1 flex flex-col justify-center gap-8">
                 <div>
                   <span className="font-heading text-xs uppercase tracking-widest text-brand-purple font-bold mb-4 block">
                     NAVIGATION
@@ -190,7 +190,7 @@ export default function Header() {
                         initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: idx * 0.05 }}
-                        className="font-display text-2xl font-bold text-brand-dark hover:text-brand-purple transition-colors py-2 border-b border-gray-100"
+                        className="font-display text-2xl font-bold text-brand-dark hover:text-brand-purple transition-colors"
                       >
                         {link.name}
                       </motion.a>
@@ -198,42 +198,33 @@ export default function Header() {
                   </div>
                 </div>
 
-                {/* Team Info Section */}
-                <div className="mt-4">
-                  <span className="font-heading text-xs uppercase tracking-widest text-brand-purple font-bold mb-4 block">
-                    The Thinkers & Doers
-                  </span>
-                  <p className="font-sans text-gray-700 leading-relaxed mb-4">
-                    The Thinkers and Doers were challenging the status quo with bold ideas and fearless execution.
+                {/* Team Info Section - Compact version */}
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p className="font-sans text-sm font-semibold text-brand-dark mb-2">
+                    Join the thinkers & doers.
                   </p>
-                  
-                  <div className="bg-gray-50 p-4 rounded-lg mt-4">
-                    <p className="font-sans text-sm font-semibold text-brand-dark mb-3">
-                      Join the thinkers & doers.
-                    </p>
-                    <p className="font-sans text-sm text-gray-600 leading-relaxed mb-4">
-                      We are a team of strategists, designers, communicators, researchers. Together, we believe that progress only happens when you refuse to play things safe.
-                    </p>
-                    <div className="flex gap-3 text-sm font-medium text-brand-purple">
-                      <span>Alav</span>
-                      <span>•</span>
-                      <span>Ranimin</span>
-                      <span>•</span>
-                      <span>Cynthia</span>
-                    </div>
+                  <p className="font-sans text-xs text-gray-600 leading-relaxed mb-3">
+                    We are a team of strategists, designers, communicators, researchers. Together, we believe that progress only happens when you refuse to play things safe.
+                  </p>
+                  <div className="flex gap-2 text-xs font-medium text-brand-purple">
+                    <span>Alav</span>
+                    <span>•</span>
+                    <span>Ranimin</span>
+                    <span>•</span>
+                    <span>Cynthia</span>
                   </div>
                 </div>
+              </div>
 
-                {/* Footer */}
-                <div className="border-t border-gray-100 pt-6 mt-auto">
-                  <a
-                    href="mailto:info@elementum.com"
-                    className="font-sans text-sm font-semibold text-brand-dark hover:text-brand-purple transition-colors inline-flex items-center gap-2"
-                  >
-                    info@elementum.com
-                    <span>→</span>
-                  </a>
-                </div>
+              {/* Footer */}
+              <div className="border-t border-gray-100 pt-6 mt-4">
+                <a
+                  href="mailto:info@elementum.com"
+                  className="font-sans text-sm font-semibold text-brand-dark hover:text-brand-purple transition-colors inline-flex items-center gap-2"
+                >
+                  info@elementum.com
+                  <span>→</span>
+                </a>
               </div>
             </motion.div>
           </>
