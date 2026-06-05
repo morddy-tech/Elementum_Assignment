@@ -16,7 +16,7 @@ export default function Header() {
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 transition-all duration-300">
+    <header className="sticky top-0 z-50 bg-white shadow-md transition-all duration-300">
       <div className="max-w-7xl mx-auto px-6 h-20 md:h-24 flex items-center justify-between">
         {/* Logo */}
         <motion.a
@@ -40,7 +40,7 @@ export default function Header() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: idx * 0.08, ease: "easeOut" }}
-              className="font-sans text-sm font-semibold tracking-wide text-gray-600 hover:text-brand-purple transition-colors relative group py-2"
+              className="font-sans text-sm font-semibold tracking-wide text-gray-700 hover:text-brand-purple transition-colors relative group py-2"
             >
               {link.name}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-brand-purple transition-all duration-300 group-hover:w-full" />
@@ -56,7 +56,7 @@ export default function Header() {
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
             onClick={() => setIsDetailsOpen(!isDetailsOpen)}
-            className="p-2 text-brand-dark hover:text-brand-purple hover:bg-gray-50 rounded-full transition-all flex flex-col justify-center items-end gap-1.5 w-10 h-10 group"
+            className="p-2 text-brand-dark hover:text-brand-purple hover:bg-gray-100 rounded-full transition-all flex flex-col justify-center items-end gap-1.5 w-10 h-10 group"
             aria-label="Team information"
           >
             <span className="w-6 h-0.5 bg-current transition-all duration-300 group-hover:w-5" />
@@ -151,7 +151,7 @@ export default function Header() {
         )}
       </AnimatePresence>
 
-      {/* Mobile Drawer - NON-SCROLLABLE VERSION */}
+      {/* Mobile Drawer */}
       <AnimatePresence>
         {isOpen && (
           <>
@@ -165,7 +165,7 @@ export default function Header() {
               className="fixed inset-0 bg-black z-40 md:hidden"
             />
 
-            {/* Slide-out Drawer - No overflow scrolling */}
+            {/* Slide-out Drawer */}
             <motion.div
               id="mobile-drawer-content"
               initial={{ x: "100%" }}
@@ -198,7 +198,7 @@ export default function Header() {
                   </div>
                 </div>
 
-                {/* Team Info Section - Compact version */}
+                {/* Team Info Section */}
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <p className="font-sans text-sm font-semibold text-brand-dark mb-2">
                     Join the thinkers & doers.
